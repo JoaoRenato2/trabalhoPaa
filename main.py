@@ -37,10 +37,10 @@ def insertion_sort(arr):
         while j >= 0 and arr[j] > key:
             comparisons += 1
             arr[j + 1] = arr[j]
-            swaps += 1
             j -= 1
         # Insere a chave na posição correta
         arr[j + 1] = key
+        swaps += 1
     return comparisons, swaps
 
 
@@ -179,9 +179,10 @@ def shellsort(arr):
             while j >= gap and arr[j - gap] > temp:
                 comparisons += 1
                 arr[j] = arr[j - gap]
-                swaps += 1
+                
                 j -= gap
             arr[j] = temp
+            swaps += 1
         gap //= 2
 
     return comparisons, swaps
@@ -189,15 +190,27 @@ def shellsort(arr):
 
 # Gera uma lista aleatória de tamanho n
 def generate_random_list(n):
-    return [random.randint(1, 1000) for _ in range(n)]
+    population = list(range(100000, 1000000))
+    random.shuffle(population)
+    return population[:n]
 
+
+def calculate_averages(metrics):
+    averages = {}
+    for algorithm_name, algorithm_metrics in metrics.items():
+        algorithm_averages = {}
+        for metric_name, metric_values in algorithm_metrics.items():
+            average = sum(metric_values) / len(metric_values)
+            algorithm_averages[metric_name] = average
+        averages[algorithm_name] = algorithm_averages
+    return averages
 
 def write_to_csv(results):
     with open('results.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Tamanho da entrada", "Comparisons (Bubble Sort)", "Swaps (Bubble Sort)", "Time (Bubble Sort)",
-                         "Comparisons (Insertion Sort)", "Swaps (Insertion Sort)", "Time (Insertion Sort)",
+        writer.writerow(["Tamanho da entrada",
                          "Comparisons (Selection Sort)", "Swaps (Selection Sort)", "Time (Selection Sort)",
+                         "Comparisons (Insertion Sort)", "Swaps (Insertion Sort)", "Time (Insertion Sort)",
                          "Comparisons (Quick Sort)", "Swaps (Quick Sort)", "Time (Quick Sort)",
                          "Comparisons (Merge Sort)", "Swaps (Merge Sort)", "Time (Merge Sort)",
                          "Comparisons (Heap Sort)", "Swaps (Heap Sort)", "Time (Heap Sort)",
@@ -205,30 +218,32 @@ def write_to_csv(results):
 
         for row in results:
             size = row[0]
-            comparisons = row[1]
-            swaps = row[2]
-            times = row[3]
+            metrics = row[1]
+
+            averages = calculate_averages(metrics)
 
             writer.writerow([size] +
-                            comparisons[0:1] + [swaps[0]] + [times[0]] +
-                            comparisons[1:2] + [swaps[1]] + [times[1]] +
-                            comparisons[2:3] + [swaps[2]] + [times[2]] +
-                            comparisons[3:4] + [swaps[3]] + [times[3]] +
-                            comparisons[4:5] + [swaps[4]] + [times[4]] +
-                            comparisons[5:6] + [swaps[5]] + [times[5]] +
-                            comparisons[6:7] + [swaps[6]] + [times[6]])
-
-
+                            [str(averages['Selection Sort']['Comparisons'])] + [str(averages['Selection Sort']['Swaps'])] + [str(averages['Selection Sort']['Time'])] +
+                            [str(averages['Insertion Sort']['Comparisons'])] + [str(averages['Insertion Sort']['Swaps'])] + [str(averages['Insertion Sort']['Time'])] +
+                            [str(averages['Quick Sort']['Comparisons'])] + [str(averages['Quick Sort']['Swaps'])] + [str(averages['Quick Sort']['Time'])] +
+                            [str(averages['Merge Sort']['Comparisons'])] + [str(averages['Merge Sort']['Swaps'])] + [str(averages['Merge Sort']['Time'])] +
+                            [str(averages['Heap Sort']['Comparisons'])] + [str(averages['Heap Sort']['Swaps'])] + [str(averages['Heap Sort']['Time'])] +
+                            [str(averages['Shell Sort']['Comparisons'])] + [str(averages['Shell Sort']['Swaps'])] + [str(averages['Shell Sort']['Time'])])
 
 def run_simulations():
-    sizes = [10, 100, 1000]
+    sizes = [1000,5000,10000]
     num_simulations = 30
     results = []
 
     for size in sizes:
-        total_comparisons = [0] * size
-        total_swaps = [0] * size
-        total_time = [0] * size
+        metrics = {
+            'Selection Sort': {'Comparisons': [], 'Swaps': [], 'Time': []},
+            'Insertion Sort': {'Comparisons': [], 'Swaps': [], 'Time': []},
+            'Quick Sort': {'Comparisons': [], 'Swaps': [], 'Time': []},
+            'Merge Sort': {'Comparisons': [], 'Swaps': [], 'Time': []},
+            'Heap Sort': {'Comparisons': [], 'Swaps': [], 'Time': []},
+            'Shell Sort': {'Comparisons': [], 'Swaps': [], 'Time': []}
+        }
 
         for _ in range(num_simulations):
             arr = generate_random_list(size)
@@ -246,19 +261,14 @@ def run_simulations():
                 start_time = time.time()
                 comparisons, swaps = algorithm(arr.copy())
                 end_time = time.time()
-                total_comparisons[size - 1] += comparisons
-                total_swaps[size - 1] += swaps
-                total_time[size - 1] += end_time - start_time
+                metrics[algorithm_name]['Comparisons'].append(comparisons)
+                metrics[algorithm_name]['Swaps'].append(swaps)
+                metrics[algorithm_name]['Time'].append(end_time - start_time)
 
-        average_comparisons = [count / num_simulations for count in total_comparisons]
-        average_swaps = [count / num_simulations for count in total_swaps]
-        average_time = [t / num_simulations for t in total_time]
-
-        result_row = [size, average_comparisons, average_swaps, average_time]
+        result_row = [size, metrics]
         results.append(result_row)
 
     if os.path.exists('results.csv'):
-    # Exclui o arquivo
         os.remove('results.csv')
 
     write_to_csv(results)
