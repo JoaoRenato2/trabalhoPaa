@@ -1,0 +1,4 @@
+Tamanho da entrada,Comparisons (Bubble Sort),Swaps (Bubble Sort),Time (Bubble Sort),Comparisons (Insertion Sort),Swaps (Insertion Sort),Time (Insertion Sort),Comparisons (Selection Sort),Swaps (Selection Sort),Time (Selection Sort),Comparisons (Quick Sort),Swaps (Quick Sort),Time (Quick Sort),Comparisons (Merge Sort),Swaps (Merge Sort),Time (Merge Sort),Comparisons (Heap Sort),Swaps (Heap Sort),Time (Heap Sort),Comparisons (Shell Sort),Swaps (Shell Sort),Time (Shell Sort)
+10,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+100,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+1000,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
