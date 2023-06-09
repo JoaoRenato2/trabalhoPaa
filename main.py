@@ -190,7 +190,7 @@ def shellsort(arr):
 
 # Gera uma lista aleatória de tamanho n
 def generate_random_list(n):
-    population = list(range(100000, 1000000))
+    population = list(range(10000, 50000))
     random.shuffle(population)
     return population[:n]
 
@@ -231,7 +231,7 @@ def write_to_csv(results):
                             [str(averages['Shell Sort']['Comparisons'])] + [str(averages['Shell Sort']['Swaps'])] + [str(averages['Shell Sort']['Time'])])
 
 def run_simulations():
-    sizes = [1000,5000,10000]
+    sizes = [10000,30000,50000]
     num_simulations = 30
     results = []
 
